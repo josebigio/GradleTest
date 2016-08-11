@@ -1,0 +1,3 @@
+include ':app'
+include 'na-core-transit-android'
+project(':na-core-transit-android').projectDir = new File('../na-core-transit-android')

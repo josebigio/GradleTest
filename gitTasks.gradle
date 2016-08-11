@@ -1,0 +1,52 @@
+import org.ajoberstar.grgit.*
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.ajoberstar:gradle-git:1.5.1'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+task pull << {
+    if (project.hasProperty('branch')){
+        System.out.println("branch to pull from: " + branch.toString())
+    }
+    def pullingBranch = project.hasProperty('branch') ? branch.toString() : "master"
+    allprojects.each { p ->
+        if(p.parent != null && !p.path.toString().contains("app")) {
+            System.out.println(String.format("pulling project: %s", p))
+            def repo = Grgit.open(dir: p.getBuildDir().parent)
+            repo.pull(branch: pullingBranch)
+            System.out.println("opened: " + repo);
+        }
+    }
+}
+
+task checkout << {
+    if (project.hasProperty('branch')){
+        System.out.println("branch to checkout and pull : " + branch.toString())
+        allprojects.each { p ->
+            if(!p.path.toString().contains("app")) {
+                System.out.println(String.format("pulling project: %s, branch: %s", p, branch.toString() ))
+                def repo = Grgit.open(dir: p.getBuildDir().parent)
+//                try {
+//                    repo = Grgit.open(dir: p.getBuildDir().parent)
+//                }
+//                catch (Exception e) {
+//                    repo = Grgit.open(dir: p.getBuildDir().parent)
+//                }
+                System.out.println("opened: " + repo.toString());
+//                repo.checkout(branch: 'existing-branch', createBranch: false)
+            }
+        }
+    }
+    else {
+        System.out.println("please pass in the branch parameter like this: gradlew" +
+                " p<branchName> checkout. Example: gradlew pdevelopment checkout");
+    }
+
+}

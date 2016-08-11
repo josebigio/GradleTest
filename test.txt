@@ -1,0 +1,4 @@
+include ':app', ':libraries:android-ui-framework', ':libraries:android-core-framework'
+
+project(':libraries:android-core-framework').projectDir = new File(settingsDir, '../android-core-framework')
+project(':libraries:android-ui-framework').projectDir = new File(settingsDir, '../android-ui-framework')
